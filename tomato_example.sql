@@ -1,0 +1,3 @@
+\COPY (select site_name,product_name,count(*) from udc join site using (site_code) join product using (prodno) where site_code=11005 group by site_name,product_name order by site_name,product_name) to tomato_product.csv with csv header
+
+\COPY (with c as (select site_name,chemname,formula_dsc,product_name,count(*) from udc join site using (site_code) join product using (prodno) join chemical using (chem_code) join formula using (formula_cd) where error_flag is null and site_code=11005 group by site_name,chemname,formula_dsc,product_name) select site_name,chemname,formula_dsc,string_agg(product_name,',') as products,sum(count) as count from c group by site_name,chemname,formula_dsc) to tomato_chem.csv with csv header

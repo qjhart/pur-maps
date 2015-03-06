@@ -6,7 +6,7 @@ set datestyle=MDY;
 create function pur_date(char(8))
 RETURNS date AS 
 $$
-select date substr($1,1,2)||'-'||substr($1,3,2)||'-'||substr($1,5,4);
+select (substr($1,1,2)||'-'||substr($1,3,2)||'-'||substr($1,5,4))::date;
 $$ LANGUAGE SQL;
 
 create domain application_unit as char
@@ -14,11 +14,11 @@ CHECK(
    VALUE in ('?','A','C','S','U')
 );
 
-comment on application_unit is 'This is the unit designation for the
+comment on domain application_unit is 'This is the unit designation for the
 application of the pesticide.  Used for acre_planted and acres_applied
 fields in the UDC codes.  Codes are: A=acres, S=square feet, C=cubic
 feet, K=thousand cubic feet, U= Misc. Examples of misc. units include:
-bins, tree holes, bunches, pallets, etc.'
+bins, tree holes, bunches, pallets, etc.';
 
 create table chemical (
 CHEM_CODE decimal(5,0) primary key,
@@ -131,8 +131,43 @@ summary_cd decimal(4,0),
 record_id char(1),
 comtrs varchar(12),
 error_flag char(2)
--- chem_code is NULL
 --primary key(use_no,chem_code)
 );
--- Many copies
---\copy from CSV HEADER;
+\set foo `for i in udc12_*.txt; do psql -d pur -c "\COPY pur.udc from $i with csv header"; done`
+create index udc_use_no on udc(use_no);
+create index udc_product on udc(prodno);
+create index udc_chem_code on udc(chem_code);
+create index site_code on udc(site_code);
+
+create domain error_type as varchar(12)
+CHECK(
+   VALUE in ('INCONSISTENT','INVALID','POSSIBLE')
+);
+
+
+create table error_descriptions (
+error_code integer primary key,
+error_description text
+);
+\copy error_descriptions from error_descriptions.txt CSV HEADER;
+
+create table errors(
+use_no decimal(8,0),
+error_id integer primary key,
+error_code integer references error_descriptions,
+error_type error_type,
+duplicate_set decimal(8,0),
+error_descripton text,
+comments text
+);
+\copy errors from errors2012.txt CSV HEADER;
+
+
+create table outlier (
+use_no decimal(8,0),
+ai_a_1000_200 boolean,
+prd_u_50m boolean,
+nn4 boolean);
+\copy outlier(use_no,ai_a_1000_200,prd_u_50m) from outlier2012.txt with csv header
+
+
