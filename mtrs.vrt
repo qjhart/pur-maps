@@ -1,0 +1,34 @@
+<OGRVRTDataSource>
+  <OGRVRTLayer name="mtrs">
+    <SrcDataSource relativeToVRT="1">pestreg.cdpr.ca.gov/pub/outgoing/gis/plsnet.shp</SrcDataSource>
+    <SrcLayer>plsnet</SrcLayer>
+<Field name="id" src="PLSNET_ID" type="Integer"/>
+<Field name="county_cd" src="COUNTY_CD" type="STRING"/>
+<Field name="median" src="BASE_LN_ME" type="STRING"/>
+<Field name="township" src="TOWNSHIP" type="STRING"/>
+<Field name="range" src="RANGE" type="STRING"/>
+<Field name="section" src="SECTION" type="STRING"/>
+<Field name="mtrs" src="MTRS" type="STRING"/>
+  </OGRVRTLayer>
+
+</OGRVRTDataSource>
+
+<!--
+<Field name="id" src="PLSNET_ID" type="Integer"/>
+<Field name="county_cd" src="COUNTY_CD" type="STRING"/>
+<Field name="" src="MTOWN" type="STRING"/>
+<Field name="" src="RANGE" type="STRING"/>
+<Field name="" src="SECTION" type="STRING"/>
+<Field name="" src="SOURCE" type="Integer"/>
+<Field name="" src="HYDROAREA" type="FLOAT"/>
+<Field name="" src="BASIN" type="Integer"/>
+<Field name="" src="REGIONNAME" type="STRING"/>
+<Field name="" src="FRQ_SECNBA" type="FLOAT"/>
+<Field name="" src="BASE_LN_ME" type="STRING"/>
+<Field name="" src="TOWNSHIP" type="STRING"/>
+<Field name="" src="MTRS" type="STRING"/>
+<Field name="" src="MTR" type="STRING"/>
+<Field name="" src="CO_MTRS" type="STRING"/>
+<Field name="" src="REGION" type="Integer"/>
+<Field name="" src="CO_MTR" type="STRING"/>
+-->

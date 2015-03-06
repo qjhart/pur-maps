@@ -19,8 +19,12 @@ configure.mk:
 	wget ${gist}/raw/e30543c3b8d8ff18a950750a0f340788cc8c1931/configure.mk
 
 
-mtrs.geojson:mtrs.vrt 
-	ogr2ogr -f GEOJSON $@ $<
+mtrs: mtrs.vrt
+	[[ -d mtrs ]] || mkdir mtrs;
+	for i in `psql -At -d pur -c "select county_cd,lower(replace(county_name,' ','_')) from pur.county"`; \
+	do n=$${i%|*}; c=$${i#*|}; \
+	ogr2ogr -f GEOJSON -where "county_cd='$$n'" mtrs/$$c.geojson mtrs.vrt ; \
+	done
 
 .PHONY:db 
 db:: db/pur db/pur.pls
